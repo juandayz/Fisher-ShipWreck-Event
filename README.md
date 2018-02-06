@@ -16,3 +16,5 @@ Open your init.sqf and call the event from:
 EpochUseEvents = true; //Enable event scheduler. Define custom scripts in dayz_server\modules to run on a schedule.
 EpochEvents = [["any","any","any","any",45,"server_BoatWreck"]];
 
+
+Now Drop server_BoatWreck.sqf into dayz_server.pbo\modules\
