@@ -1,0 +1,96 @@
+//by juandayz 2018
+private ["_loot_lists","_loot2","_position","_positionarray","_mainpos","_ship","_marker_on_radius","_markerRadius","_hint","_marker"];
+
+_loot_lists = [
+
+[
+["DMR_DZ","ItemFishingPole"],
+["20Rnd_762x51_DMR","PartOre","ItemJerrycan","ItemComboLock","MortarBucket"]
+],
+
+[
+["ItemMachete","ItemPickaxe","ItemSledge"],
+["ItemFuelcan","ItemFuelcan","ItemKiloHemp","bulk_ItemWire"]
+],
+
+[
+["ItemPickaxe","ItemSledge"],
+["ItemMixOil","bulk_PartGeneric","PartPlywoodPack"]
+],
+
+[
+["RH_hk417acog"],
+["ItemKiloTobacco","bulk_ItemSodaCokeFull","MortarBucket"]
+]
+
+];
+
+_loot2 = _loot_lists call BIS_fnc_selectRandom;
+
+_position = [6821.376, 8596.1465, -1.5752504];
+_positionarray = [
+[(_position select 0) - 84.5, (_position select 1) - 21,-0.012],
+[(_position select 0) - 70, (_position select 1) - 20,-0.012],
+[(_position select 0) + 45, (_position select 1) + 25,-0.012],
+[(_position select 0) + 96, (_position select 1) - 14,-0.012],
+[(_position select 0) + 49, (_position select 1) + 17.5,-0.012],
+[(_position select 0) + 38.5, (_position select 1) - 16,-0.012]
+];
+_mainpos = _positionarray call BIS_fnc_selectRandom;
+
+
+
+
+
+if (isNil "EPOCH_EVENT_RUNNING") then {
+EPOCH_EVENT_RUNNING = false;
+};
+ 
+// Check for another event running
+if (EPOCH_EVENT_RUNNING) exitWith {
+diag_log("Event already running");
+};
+
+EPOCH_EVENT_RUNNING = true;
+
+
+_ship = createVehicle ["Fishing_Boat", [(_mainpos select 0) + 1, (_mainpos select 1) - 1,-0.1],[], 0, "CAN_COLLIDE"];
+_ship setVehicleArmor 0.022631126;
+_ship setFuel 0;
+dayz_serverObjectMonitor set [count dayz_serverObjectMonitor,_ship];
+clearweaponcargoglobal _ship;
+clearmagazinecargoglobal _ship;
+
+{
+_ship addWeaponCargoGlobal [_x,1];
+} forEach (_loot2 select 0);
+{
+_ship addMagazineCargoGlobal [_x,1];
+} forEach (_loot2 select 1);
+
+_markerRadius = 550;
+_marker_on_radius = createMarker ["Fishing ShipWreck",_position];
+_marker_on_radius setMarkerShape "ELLIPSE";
+_marker_on_radius setMarkerType "Cricle01";
+_marker_on_radius setMarkerColor "ColorRed";
+_marker_on_radius setMarkerAlpha 0.8;
+_marker_on_radius setMarkerBrush "Solid";
+_marker_on_radius setMarkerSize [(_markerRadius + 50), (_markerRadius + 50)];
+_marker = createMarker ["fishing", _position];
+_marker setMarkerText "Fishing ShipWreck";
+_marker setMarkerType "mil_circle";
+_marker setMarkerColor "ColorBlue";
+_marker setMarkerBrush "Solid";
+_marker setMarkerSize [0.1, 0.1];
+
+// Send message to users
+_hint = parseText format["<t align='center' color='#31db3c' shadow='2' size='1.55'>NEW INCIDENT</t><br/><t align='center' color='#ffffff'>There is a fishing ship wrecking. Find them! could have useful things.!</t>"];
+RemoteMessage = ['hint', _hint];
+publicVariable "RemoteMessage";
+
+EPOCH_EVENT_RUNNING = false;
+
+sleep 900;
+deleteMarker _marker_on_radius;
+deleteMarker _marker;
+deleteVehicle _ship;
