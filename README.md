@@ -7,6 +7,7 @@ You need change the main coord in this line by your own.
 ```ruby
 _position = [6821.376, 8596.1465, -1.5752504];
 ```
+And check the loot items. Thers a few for overpoch.
 
 INSTALL:
 
