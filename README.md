@@ -1,5 +1,8 @@
 # Fisher-ShipWreck-Event
 
+PLEASE DONATE: https://github.com/juandayz/Fisher-ShipWreck-Event/blob/master/DONATION.md
+
+
 Spawn a fishing boat wreack in the ocean with some customizable loot inside.
 
 You need change the main coord in this line by your own. 
